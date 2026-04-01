@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Registrar el service worker para funcionamiento offline
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/service-worker.js')
+    navigator.serviceWorker.register('./service-worker.js')
       .then(registration => {
         console.log('Service Worker registrado correctamente:', registration);
       })

@@ -3,18 +3,18 @@
  * Maneja caché offline y actualizaciones
  */
 
-const CACHE_NAME = 'tasks-app-v1';
+const CACHE_NAME = 'tasks-app-v1.1';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/js/app.js',
-  '/js/storage.js',
-  '/js/ui.js',
-  '/assets/styles/styles.css',
-  '/assets/images/profile.png',
-  '/assets/icons/icon-192.png',
-  '/assets/icons/icon-512.png'
+  './',
+  './index.html',
+  './manifest.json',
+  './js/app.js',
+  './js/storage.js',
+  './js/ui.js',
+  './assets/styles/styles.css',
+  './assets/images/profile.png',
+  './assets/icons/icon-192.png',
+  './assets/icons/icon-512.png'
 ];
 
 // Instalar el service worker y cachear archivos
@@ -75,7 +75,7 @@ self.addEventListener('fetch', event => {
         // Si falla la red, intentar obtener del caché
         return caches.match(event.request)
           .then(response => {
-            return response || caches.match('/index.html');
+            return response || caches.match('./index.html');
           });
       })
   );

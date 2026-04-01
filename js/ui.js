@@ -93,6 +93,9 @@ const UI = {
     const prioritySelect = document.getElementById('taskPriority');
     if (modal) {
       modal.style.display = 'flex';
+      delete input.dataset.editId;
+      document.querySelector('#inputModal h2').textContent = 'Nueva tarea';
+      document.getElementById('saveTaskBtn').textContent = 'Crear';
       input.focus();
       input.value = '';
       if (dateInput) dateInput.value = new Date().toISOString().split('T')[0];
@@ -112,7 +115,7 @@ const UI = {
     const prioritySelect = document.getElementById('taskPriority');
     if (modal) {
       modal.style.display = 'none';
-      input.removeAttribute('data-editId');
+      delete input.dataset.editId;
       if (timeInput) timeInput.value = '';
       if (dateInput) dateInput.value = '';
       if (prioritySelect) prioritySelect.value = 'medium';

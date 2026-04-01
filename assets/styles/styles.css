@@ -630,11 +630,50 @@ main {
   header,
   #addTaskBtn,
   .filters,
-  .task-buttons {
+  .task-buttons,
+  .bottom-nav {
     display: none;
   }
 
   .task-card {
     page-break-inside: avoid;
   }
+}
+
+/* ===================== BOTTOM NAV (iOS Style) ===================== */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0;
+  padding-bottom: env(safe-area-inset-bottom, 10px);
+  z-index: 1000;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s;
+  flex: 1;
+}
+
+.nav-item svg {
+  margin-bottom: 4px;
+}
+
+.nav-item.active {
+  color: var(--primary);
 }

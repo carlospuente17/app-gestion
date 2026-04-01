@@ -21,10 +21,34 @@ const UI = {
    * Adjunta event listeners a elementos
    */
   attachEventListeners() {
+    // Navigation Tabs
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+      item.addEventListener('click', (e) => {
+        navItems.forEach(nav => nav.classList.remove('active'));
+        e.currentTarget.classList.add('active');
+        
+        const tab = e.currentTarget.dataset.tab;
+        
+        if (tab === 'dashboard') {
+          document.getElementById('dashboardView').style.display = 'block';
+          document.getElementById('tasksView').style.display = 'none';
+          document.getElementById('addTaskBtn').style.display = 'none';
+          this.renderDashboard();
+        } else {
+          document.getElementById('dashboardView').style.display = 'none';
+          document.getElementById('tasksView').style.display = 'block';
+          document.getElementById('addTaskBtn').style.display = 'flex';
+          this.render();
+        }
+      });
+    });
+
     // Botón de agregar tarea
     const addBtn = document.getElementById('addTaskBtn');
     if (addBtn) {
       addBtn.addEventListener('click', () => this.showInputModal());
+      addBtn.style.display = 'none'; // Hide by default on Dashboard
     }
 
     // Filtros
@@ -183,6 +207,54 @@ const UI = {
   render() {
     this.renderTaskList();
     this.updateTaskCount();
+    this.renderDashboard();
+  },
+
+  /**
+   * Renderiza los datos del Dashboard
+   */
+  renderDashboard() {
+    const allTasks = Storage.getTasks();
+    const dashTotal = document.getElementById('dashTotal');
+    const dashPending = document.getElementById('dashPending');
+    const dashCompleted = document.getElementById('dashCompleted');
+    const dashPercent = document.getElementById('dashPercent');
+    const dashProgressCircle = document.getElementById('dashProgressCircle');
+    const dashUrgentTasks = document.getElementById('dashUrgentTasks');
+
+    if (!dashTotal) return;
+
+    const completedTasks = allTasks.filter(t => t.completed);
+    const pendingTasks = allTasks.filter(t => !t.completed);
+    const total = allTasks.length;
+
+    // Actualizar Contadores
+    dashTotal.textContent = total;
+    dashPending.textContent = pendingTasks.length;
+    dashCompleted.textContent = completedTasks.length;
+
+    // Actualizar Porcentaje y Gráfico
+    const percent = total === 0 ? 0 : Math.round((completedTasks.length / total) * 100);
+    dashPercent.textContent = `${percent}%`;
+    dashProgressCircle.style.background = `conic-gradient(var(--success) ${percent}%, rgba(0,0,0,0.1) 0)`;
+
+    // Renderizar Tareas Urgentes (Prioridad Alta no completadas)
+    const urgentTasks = pendingTasks
+      .filter(t => t.priority === 'high')
+      .sort((a, b) => new Date(a.date || a.createdAt) - new Date(b.date || b.createdAt))
+      .slice(0, 3); // Mostrar máximo 3 urgentes
+
+    if (urgentTasks.length === 0) {
+      dashUrgentTasks.innerHTML = `
+        <div style="text-align: center; color: var(--text-secondary); padding: 15px; background: rgba(255,255,255,0.5); border-radius: 12px; border: 1px dashed rgba(0,0,0,0.1);">
+          ✅ ¡No tienes tareas de alto riesgo pendientes!
+        </div>
+      `;
+    } else {
+      dashUrgentTasks.innerHTML = urgentTasks.map(task => this.createTaskElement(task)).join('');
+      // Attach listeners for these urgent tasks too
+      this.attachTaskEventListeners(dashUrgentTasks);
+    }
   },
 
   /**
@@ -223,7 +295,7 @@ const UI = {
       .join('');
 
     // Adjuntar event listeners a las tareas
-    this.attachTaskEventListeners();
+    this.attachTaskEventListeners(container);
   },
 
   /**
@@ -272,15 +344,23 @@ const UI = {
   /**
    * Adjunta event listeners a las tareas
    */
-  attachTaskEventListeners() {
-    document.querySelectorAll('[data-action="toggle"]').forEach(btn => {
+  attachTaskEventListeners(container = document) {
+    const toggles = container.querySelectorAll('[data-action="toggle"]');
+    toggles.forEach(btn => {
+      // Remover listener viejo por si acaso
+      btn.replaceWith(btn.cloneNode(true));
+    });
+    
+    container.querySelectorAll('[data-action="toggle"]').forEach(btn => {
       btn.addEventListener('change', (e) => {
         Storage.toggleTaskComplete(parseInt(e.target.dataset.id));
         this.render();
       });
     });
 
-    document.querySelectorAll('[data-action="delete"]').forEach(btn => {
+    const deletes = container.querySelectorAll('[data-action="delete"]');
+    deletes.forEach(btn => btn.replaceWith(btn.cloneNode(true)));
+    container.querySelectorAll('[data-action="delete"]').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const taskId = parseInt(e.currentTarget.dataset.id);
         if (confirm('¿Eliminar esta tarea?')) {
@@ -290,7 +370,9 @@ const UI = {
       });
     });
 
-    document.querySelectorAll('[data-action="edit"]').forEach(btn => {
+    const edits = container.querySelectorAll('[data-action="edit"]');
+    edits.forEach(btn => btn.replaceWith(btn.cloneNode(true)));
+    container.querySelectorAll('[data-action="edit"]').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const taskId = parseInt(e.currentTarget.dataset.id);
         const task = Storage.getTaskById(taskId);

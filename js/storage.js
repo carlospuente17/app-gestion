@@ -26,19 +26,20 @@ const Storage = {
   /**
    * Agrega una nueva tarea
    * @param {string} text - Texto de la tarea
-   * @param {string} type - Tipo: 'task' o 'note'
+   * @param {string} date - Fecha de la tarea (YYYY-MM-DD o string)
    * @param {string} time - Hora de la tarea (formato HH:MM)
+   * @param {string} priority - Prioridad de la tarea (low, medium, high)
    * @returns {Object} La tarea creada
    */
-  addTask(text, type = 'task', time = '') {
+  addTask(text, date = '', time = '', priority = 'medium') {
     const tasks = this.getTasks();
     const newTask = {
       id: Date.now(),
       text: text,
-      type: type,
+      date: date || new Date().toISOString().split('T')[0],
       time: time,
+      priority: priority,
       completed: false,
-      date: new Date().toLocaleDateString('es-ES'),
       createdAt: new Date().toISOString()
     };
     tasks.push(newTask);

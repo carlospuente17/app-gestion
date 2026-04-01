@@ -10,36 +10,12 @@ const UI = {
    * Inicializa los eventos de la interfaz
    */
   init() {
-    this.initTheme();
     this.attachEventListeners();
     this.render();
+    this.updateCurrentDate();
   },
 
-  /**
-   * Inicializa el tema Oscuro / Claro
-   */
-  initTheme() {
-    const toggleBtn = document.getElementById('themeToggleBtn');
-    const savedTheme = localStorage.getItem('theme');
-    
-    // Si guarda oscuro, o si el sistema de su iPhone lo pide
-    if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.body.classList.add('dark-theme');
-      toggleBtn.textContent = '☀️';
-    } else {
-      document.body.classList.remove('dark-theme');
-      toggleBtn.textContent = '🌙';
-    }
-    
-    if (toggleBtn) {
-      toggleBtn.addEventListener('click', () => {
-        document.body.classList.toggle('dark-theme');
-        const isDark = document.body.classList.contains('dark-theme');
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        toggleBtn.textContent = isDark ? '☀️' : '🌙';
-      });
-    }
-  },
+
 
   /**
    * Adjunta event listeners a elementos
@@ -61,6 +37,18 @@ const UI = {
         this.render();
       });
     });
+
+    const clearCompletedBtn = document.getElementById('clearCompletedBtn');
+    if (clearCompletedBtn) {
+      clearCompletedBtn.addEventListener('click', () => {
+        if (confirm('¿Eliminar todas las tareas completadas?')) {
+          const tasks = Storage.getTasks();
+          const pendingTasks = tasks.filter(t => !t.completed);
+          Storage.saveTasks(pendingTasks);
+          this.render();
+        }
+      });
+    }
 
     // Modal de entrada
     const modal = document.getElementById('inputModal');
@@ -100,12 +88,16 @@ const UI = {
   showInputModal() {
     const modal = document.getElementById('inputModal');
     const input = document.getElementById('taskInput');
+    const dateInput = document.getElementById('taskDate');
     const timeInput = document.getElementById('taskTime');
+    const prioritySelect = document.getElementById('taskPriority');
     if (modal) {
       modal.style.display = 'flex';
       input.focus();
       input.value = '';
+      if (dateInput) dateInput.value = new Date().toISOString().split('T')[0];
       if (timeInput) timeInput.value = '';
+      if (prioritySelect) prioritySelect.value = 'medium';
     }
   },
 
@@ -116,10 +108,14 @@ const UI = {
     const modal = document.getElementById('inputModal');
     const input = document.getElementById('taskInput');
     const timeInput = document.getElementById('taskTime');
+    const dateInput = document.getElementById('taskDate');
+    const prioritySelect = document.getElementById('taskPriority');
     if (modal) {
       modal.style.display = 'none';
       input.removeAttribute('data-editId');
       if (timeInput) timeInput.value = '';
+      if (dateInput) dateInput.value = '';
+      if (prioritySelect) prioritySelect.value = 'medium';
       document.querySelector('#inputModal h2').textContent = 'Nueva tarea';
       document.getElementById('saveTaskBtn').textContent = 'Crear';
     }
@@ -131,8 +127,13 @@ const UI = {
   saveTaskFromModal() {
     const input = document.getElementById('taskInput');
     const timeInput = document.getElementById('taskTime');
+    const dateInput = document.getElementById('taskDate');
+    const prioritySelect = document.getElementById('taskPriority');
+    
     const text = input.value.trim();
     const time = timeInput ? timeInput.value : '';
+    const date = dateInput ? dateInput.value : '';
+    const priority = prioritySelect ? prioritySelect.value : 'medium';
     const editId = input.dataset.editId;
 
     if (text.length === 0) {
@@ -146,9 +147,9 @@ const UI = {
     }
 
     if (editId) {
-      Storage.updateTask(parseInt(editId), { text: text, time: time });
+      Storage.updateTask(parseInt(editId), { text: text, date: date, time: time, priority: priority });
     } else {
-      Storage.addTask(text, 'task', time);
+      Storage.addTask(text, date, time, priority);
     }
 
     this.closeInputModal();
@@ -200,7 +201,21 @@ const UI = {
     }
 
     container.innerHTML = tasks
-      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      .sort((a, b) => {
+        // Sort by date first (ascending)
+        const dateA = new Date(a.date || a.createdAt);
+        const dateB = new Date(b.date || b.createdAt);
+        if (dateA.getTime() !== dateB.getTime()) {
+          return dateA - dateB;
+        }
+        // Then by priority
+        const priorityOrder = { high: 3, medium: 2, low: 1 };
+        const pA = priorityOrder[a.priority || 'medium'];
+        const pB = priorityOrder[b.priority || 'medium'];
+        if (pA !== pB) return pB - pA;
+        
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      })
       .map(task => this.createTaskElement(task))
       .join('');
 
@@ -215,6 +230,12 @@ const UI = {
    */
   createTaskElement(task) {
     const timeDisplay = task.time ? ` • ${task.time}` : '';
+    
+    let priorityIcon = '';
+    if (task.priority === 'high') priorityIcon = '<span class="priority-icon" style="color: var(--danger); margin-right: 4px;">🔴</span>';
+    else if (task.priority === 'low') priorityIcon = '<span class="priority-icon" style="color: var(--success); margin-right: 4px;">🟡</span>';
+    else priorityIcon = '<span class="priority-icon" style="color: var(--primary); margin-right: 4px;">🟠</span>';
+
     return `
       <div class="task-card ${task.completed ? 'completed' : ''}" data-task-id="${task.id}">
         <div class="task-content">
@@ -229,16 +250,16 @@ const UI = {
             <label class="checkbox-custom"></label>
           </div>
           <div class="task-text-wrapper">
-            <p class="task-text">${this.escapeHtml(task.text)}</p>
+            <p class="task-text">${priorityIcon}${this.escapeHtml(task.text)}</p>
             <span class="task-date">${task.date}${timeDisplay}</span>
           </div>
         </div>
         <div class="task-buttons">
           <button class="task-btn btn-edit" data-action="edit" data-id="${task.id}" title="Editar">
-            ✏️
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
           </button>
           <button class="task-btn btn-delete" data-action="delete" data-id="${task.id}" title="Eliminar">
-            🗑️
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
           </button>
         </div>
       </div>
@@ -284,12 +305,17 @@ const UI = {
   showEditModal(task) {
     const input = document.getElementById('taskInput');
     const timeInput = document.getElementById('taskTime');
+    const dateInput = document.getElementById('taskDate');
+    const prioritySelect = document.getElementById('taskPriority');
     const modal = document.getElementById('inputModal');
     const title = modal.querySelector('h2');
     const saveBtn = document.getElementById('saveTaskBtn');
 
     input.value = task.text;
     if (timeInput) timeInput.value = task.time || '';
+    if (dateInput) dateInput.value = task.date || '';
+    if (prioritySelect) prioritySelect.value = task.priority || 'medium';
+    
     title.textContent = 'Editar tarea';
     input.dataset.editId = task.id;
     saveBtn.textContent = 'Actualizar';

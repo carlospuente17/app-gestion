@@ -34,9 +34,6 @@
         <p id="currentDate" style="font-size: 12px; margin-top: 4px;"></p>
       </div>
 
-      <!-- Botón de Tema (Oscuro/Claro) -->
-      <button id="themeToggleBtn" aria-label="Cambiar tema">🌙</button>
-
       <!-- Contador de tareas -->
       <div class="task-stats">
         <span id="taskCounter">0/0</span>
@@ -47,7 +44,7 @@
   <!-- CONTENIDO PRINCIPAL -->
   <main>
     <!-- FILTROS -->
-    <div class="filters">
+    <div class="filters" style="flex-wrap: wrap;">
       <button class="filter-btn active" data-filter="all">
         Todas
       </button>
@@ -56,6 +53,11 @@
       </button>
       <button class="filter-btn" data-filter="completed">
         Completadas
+      </button>
+      <!-- Limpiar Completadas -->
+      <button id="clearCompletedBtn" class="filter-btn" style="flex: 100%; margin-top: 8px; color: var(--danger); display: flex; align-items: center; justify-content: center; gap: 6px;">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+        Limpiar completadas
       </button>
     </div>
 
@@ -66,30 +68,49 @@
   </main>
 
   <!-- BOTÓN FLOTANTE PARA AGREGAR TAREAS -->
-  <button id="addTaskBtn" title="Agregar tarea">+</button>
+  <button id="addTaskBtn" title="Agregar tarea">
+    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+  </button>
 
   <!-- MODAL PARA ENTRADA DE TAREAS -->
   <div id="inputModal">
     <div class="modal-content">
       <h2>Nueva tarea</h2>
       <div class="modal-input-group">
-        <textarea 
-          id="taskInput" 
-          placeholder="¿Qué necesitas hacer?" 
+        <textarea
+          id="taskInput"
+          placeholder="¿Qué necesitas hacer?"
           maxlength="500"
           autocomplete="off"
         ></textarea>
       </div>
-      <div class="modal-input-group">
-        <label for="taskTime">Hora (opcional)</label>
-        <input 
-          type="time" 
-          id="taskTime" 
-          autocomplete="off"
-        >
+      <div class="modal-input-group" style="display: flex; gap: 8px;">
+        <div style="flex: 1;">
+          <label for="taskDate">Fecha</label>
+          <input
+            type="date"
+            id="taskDate"
+            autocomplete="off"
+          >
+        </div>
+        <div style="flex: 1;">
+          <label for="taskTime">Hora</label>
+          <input
+            type="time"
+            id="taskTime"
+            autocomplete="off"
+          >
+        </div>
       </div>
-      <div class="modal-buttons">
-        <button id="saveTaskBtn">Crear</button>
+      <div class="modal-input-group" style="margin-top: 10px;">
+        <label for="taskPriority">Prioridad</label>
+        <select id="taskPriority" style="width: 100%; padding: 10px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.1); background: rgba(255,255,255,0.8); font-size: 16px;">
+          <option value="low">🟡 Baja</option>
+          <option value="medium" selected>🟠 Media</option>
+          <option value="high">🔴 Alta</option>
+        </select>
+      </div>
+      <div class="modal-buttons" style="margin-top: 15px;">
         <button id="closeModal">Cancelar</button>
       </div>
     </div>

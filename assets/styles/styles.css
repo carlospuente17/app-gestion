@@ -121,7 +121,6 @@ header {
 }
 
 .task-stats {
-  margin-left: auto;
   background: rgba(0, 122, 255, 0.1);
   border-radius: var(--radius-md);
   padding: 8px 12px;
@@ -624,59 +623,83 @@ main {
   }
 }
 
-/* ===================== DARK MODE (Opcional) ===================== */
+/* ===================== DARK MODE BUTTON ===================== */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg-primary: #000000;
-    --bg-secondary: #1C1C1E;
-    --text-primary: #FFFFFF;
-    --text-secondary: #8E8E93;
-    --border-color: rgba(255, 255, 255, 0.1);
-  }
+#themeToggleBtn {
+  margin-left: auto;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.05);
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  margin-right: 8px;
+}
 
-  body {
-    background: linear-gradient(135deg, #000000 0%, #1C1C1E 100%);
-  }
+#themeToggleBtn:active {
+  transform: scale(0.9);
+}
 
-  header {
-    background: rgba(28, 28, 30, 0.7);
-    border-bottom-color: rgba(255, 255, 255, 0.1);
-  }
+body.dark-theme #themeToggleBtn {
+  background: rgba(255, 255, 255, 0.1);
+}
 
-  .task-card {
-    background: rgba(28, 28, 30, 0.6);
-    border-color: rgba(255, 255, 255, 0.1);
-  }
+/* ===================== DARK MODE (Manual + Sistema) ===================== */
 
-  .task-card.completed {
-    background: rgba(45, 45, 48, 0.6);
-  }
+body.dark-theme {
+  --bg-primary: #000000;
+  --bg-secondary: #1C1C1E;
+  --text-primary: #FFFFFF;
+  --text-secondary: #8E8E93;
+  --border-color: rgba(255, 255, 255, 0.1);
+  
+  background: linear-gradient(135deg, #000000 0%, #1C1C1E 100%);
+}
 
-  .filters {
-    background: rgba(28, 28, 30, 0.4);
-    border-color: rgba(255, 255, 255, 0.1);
-  }
+body.dark-theme header {
+  background: rgba(28, 28, 30, 0.7);
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
 
-  .modal-content {
-    background: rgba(28, 28, 30, 0.95);
-    border-color: rgba(255, 255, 255, 0.1);
-  }
+body.dark-theme .task-card {
+  background: rgba(28, 28, 30, 0.6);
+  border-color: rgba(255, 255, 255, 0.1);
+}
 
-  #taskInput {
-    background: rgba(45, 45, 48, 0.8);
-    color: var(--text-primary);
-    border-color: rgba(255, 255, 255, 0.1);
-  }
+body.dark-theme .task-card.completed {
+  background: rgba(45, 45, 48, 0.6);
+}
 
-  #taskInput:focus {
-    background: rgba(60, 60, 65, 0.9);
-    border-color: var(--primary);
-  }
+body.dark-theme .filters {
+  background: rgba(28, 28, 30, 0.4);
+  border-color: rgba(255, 255, 255, 0.1);
+}
 
-  #closeModal {
-    background: rgba(255, 255, 255, 0.1);
-  }
+body.dark-theme .modal-content {
+  background: rgba(28, 28, 30, 0.95);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme #taskInput,
+body.dark-theme #taskTime {
+  background: rgba(45, 45, 48, 0.8);
+  color: var(--text-primary);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme #taskInput:focus,
+body.dark-theme #taskTime:focus {
+  background: rgba(60, 60, 65, 0.9);
+  border-color: var(--primary);
+}
+
+body.dark-theme #closeModal {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 /* ===================== IMPRIMIR ===================== */

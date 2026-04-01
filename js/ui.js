@@ -10,8 +10,35 @@ const UI = {
    * Inicializa los eventos de la interfaz
    */
   init() {
+    this.initTheme();
     this.attachEventListeners();
     this.render();
+  },
+
+  /**
+   * Inicializa el tema Oscuro / Claro
+   */
+  initTheme() {
+    const toggleBtn = document.getElementById('themeToggleBtn');
+    const savedTheme = localStorage.getItem('theme');
+    
+    // Si guarda oscuro, o si el sistema de su iPhone lo pide
+    if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.body.classList.add('dark-theme');
+      toggleBtn.textContent = '☀️';
+    } else {
+      document.body.classList.remove('dark-theme');
+      toggleBtn.textContent = '🌙';
+    }
+    
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark-theme');
+        const isDark = document.body.classList.contains('dark-theme');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        toggleBtn.textContent = isDark ? '☀️' : '🌙';
+      });
+    }
   },
 
   /**

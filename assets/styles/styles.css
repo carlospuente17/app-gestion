@@ -1,0 +1,695 @@
+/**
+ * Estilos iOS Glassmorphism para Gestor de Tareas
+ * Diseño mobile-first optimizado para iPhone
+ */
+
+/* ===================== VARIABLES Y RESET ===================== */
+
+:root {
+  --primary: #007AFF;
+  --primary-dark: #0051D5;
+  --success: #34C759;
+  --danger: #FF3B30;
+  --warning: #FF9500;
+  --bg-primary: #F5F5F7;
+  --bg-secondary: #FFFFFF;
+  --text-primary: #000000;
+  --text-secondary: #8E8E93;
+  --border-color: rgba(0, 0, 0, 0.1);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --glass-blur: 20px;
+  --radius-lg: 20px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  background: linear-gradient(135deg, #F5F5F7 0%, #EFEFEF 100%);
+  color: var(--text-primary);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -webkit-user-select: none;
+  user-select: none;
+  background-attachment: fixed;
+}
+
+/* ===================== HEADER ===================== */
+
+header {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(var(--glass-blur));
+  border-bottom: 1px solid var(--border-color);
+  padding: 24px 20px;
+  padding-top: 48px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-sm);
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.profile-photo {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #007AFF 0%, #00D4FF 100%);
+  border: 3px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+  object-fit: cover;
+  flex-shrink: 0;
+  animation: profileEntry 0.6s ease-out;
+}
+
+@keyframes profileEntry {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.welcome-section h1 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  animation: slideInRight 0.6s ease-out;
+}
+
+.welcome-section p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  animation: slideInRight 0.6s ease-out 0.1s both;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.task-stats {
+  margin-left: auto;
+  background: rgba(0, 122, 255, 0.1);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary);
+  white-space: nowrap;
+  animation: slideInRight 0.6s ease-out 0.2s both;
+}
+
+/* ===================== MAIN CONTENT ===================== */
+
+main {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 20px;
+  padding-bottom: 100px;
+}
+
+/* ===================== FILTERS ===================== */
+
+.filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(var(--glass-blur));
+  border-radius: var(--radius-lg);
+  padding: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  animation: slideInDown 0.6s ease-out 0.3s both;
+}
+
+@keyframes slideInDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.filter-btn {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.filter-btn:active {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(0.98);
+}
+
+.filter-btn.active {
+  background: linear-gradient(135deg, #007AFF 0%, #0051D5 100%);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+/* ===================== TASK LIST ===================== */
+
+#tasksList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: fadeIn 0.4s ease-out 0.4s both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-secondary);
+  animation: fadeIn 0.6s ease-out;
+}
+
+.empty-state p {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+/* ===================== TASK CARD ===================== */
+
+.task-card {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: scaleIn 0.4s ease-out;
+  cursor: default;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.task-card:active {
+  transform: scale(0.98);
+}
+
+.task-card.completed {
+  opacity: 0.6;
+  background: rgba(240, 240, 245, 0.6);
+}
+
+.task-card.completed .task-text {
+  text-decoration: line-through;
+  color: var(--text-secondary);
+}
+
+.task-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.task-checkbox-wrapper {
+  position: relative;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.task-checkbox {
+  position: absolute;
+  opacity: 0;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.checkbox-custom {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--primary);
+  border-radius: 8px;
+  background: transparent;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.task-checkbox:checked + .checkbox-custom {
+  background: var(--primary);
+  border-color: var(--primary);
+  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
+}
+
+.task-checkbox:checked + .checkbox-custom::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.task-text-wrapper {
+  flex: 1;
+  min-width: 0;
+  padding-top: 2px;
+}
+
+.task-text {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+
+.task-date {
+  font-size: 12px;
+  color: var(--text-secondary);
+  display: inline-block;
+}
+
+.task-buttons {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.task-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: rgba(0, 0, 0, 0.05);
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.task-btn:active {
+  transform: scale(0.9);
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.btn-edit:hover,
+.btn-delete:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.btn-delete {
+  background: rgba(255, 59, 48, 0.1);
+}
+
+.btn-delete:active {
+  background: rgba(255, 59, 48, 0.2);
+}
+
+/* ===================== MODAL ===================== */
+
+#inputModal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  align-items: flex-end;
+  animation: backdropFadeIn 0.3s ease-out;
+}
+
+@keyframes backdropFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-content {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(var(--glass-blur));
+  border-top-left-radius: var(--radius-lg);
+  border-top-right-radius: var(--radius-lg);
+  padding: 32px 20px 40px;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.1);
+  animation: slideUpModal 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-bottom: none;
+}
+
+@keyframes slideUpModal {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-content h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: var(--text-primary);
+}
+
+.modal-input-group {
+  margin-bottom: 20px;
+}
+
+.modal-input-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+#taskInput {
+  width: 100%;
+  padding: 16px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 16px;
+  font-family: inherit;
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+  resize: none;
+  min-height: 80px;
+  max-height: 150px;
+}
+
+#taskInput:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+}
+
+#taskTime {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 16px;
+  font-family: inherit;
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+}
+
+#taskTime:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.modal-buttons button {
+  flex: 1;
+  padding: 16px;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+#saveTaskBtn {
+  background: linear-gradient(135deg, #007AFF 0%, #0051D5 100%);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+#saveTaskBtn:active {
+  transform: scale(0.98);
+  box-shadow: var(--shadow-lg);
+}
+
+#closeModal {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text-primary);
+}
+
+#closeModal:active {
+  background: rgba(0, 0, 0, 0.1);
+  transform: scale(0.98);
+}
+
+/* ===================== FLOATING ACTION BUTTON ===================== */
+
+#addTaskBtn {
+  position: fixed;
+  bottom: 32px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #007AFF 0%, #0051D5 100%);
+  color: white;
+  font-size: 28px;
+  font-weight: 300;
+  cursor: pointer;
+  box-shadow: var(--shadow-lg);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fab 0.6s ease-out 0.5s both;
+}
+
+@keyframes fab {
+  from {
+    transform: scale(0) translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+#addTaskBtn:active {
+  transform: scale(0.9);
+  box-shadow: var(--shadow-md);
+}
+
+#addTaskBtn:active {
+  background: linear-gradient(135deg, #0051D5 0%, #003FA0 100%);
+}
+
+/* ===================== RESPONSIVE DESIGN ===================== */
+
+@media (max-width: 360px) {
+  body {
+    font-size: 15px;
+  }
+
+  main {
+    padding: 16px;
+  }
+
+  header {
+    padding: 20px 16px;
+    padding-top: 44px;
+  }
+
+  .header-content {
+    gap: 12px;
+  }
+
+  .profile-photo {
+    width: 48px;
+    height: 48px;
+  }
+
+  .welcome-section h1 {
+    font-size: 18px;
+  }
+
+  .task-card {
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .task-text {
+    font-size: 15px;
+  }
+}
+
+@media (min-width: 481px) {
+  body {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  main {
+    margin-top: 0;
+  }
+}
+
+/* ===================== DARK MODE (Opcional) ===================== */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: #000000;
+    --bg-secondary: #1C1C1E;
+    --text-primary: #FFFFFF;
+    --text-secondary: #8E8E93;
+    --border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  body {
+    background: linear-gradient(135deg, #000000 0%, #1C1C1E 100%);
+  }
+
+  header {
+    background: rgba(28, 28, 30, 0.7);
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .task-card {
+    background: rgba(28, 28, 30, 0.6);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .task-card.completed {
+    background: rgba(45, 45, 48, 0.6);
+  }
+
+  .filters {
+    background: rgba(28, 28, 30, 0.4);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .modal-content {
+    background: rgba(28, 28, 30, 0.95);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  #taskInput {
+    background: rgba(45, 45, 48, 0.8);
+    color: var(--text-primary);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  #taskInput:focus {
+    background: rgba(60, 60, 65, 0.9);
+    border-color: var(--primary);
+  }
+
+  #closeModal {
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* ===================== IMPRIMIR ===================== */
+
+@media print {
+  header,
+  #addTaskBtn,
+  .filters,
+  .task-buttons {
+    display: none;
+  }
+
+  .task-card {
+    page-break-inside: avoid;
+  }
+}

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="description" content="Una aplicación PWA para gestionar tus tareas personales de forma offline">
+  <meta name="theme-color" content="#007AFF">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Mis Tareas">
+  <meta name="apple-touch-icon" href="/assets/icons/icon-192.png">
+  <meta property="og:title" content="Gestor de Tareas Personal">
+  <meta property="og:description" content="Gestiona tus tareas personales de forma offline">
+  <meta property="og:image" content="/assets/icons/icon-512.png">
+
+  <title>Gestor de Tareas - Carlos Puente Ortuño</title>
+  
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/png" href="/assets/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
+  <link rel="stylesheet" href="/assets/styles/styles.css">
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <div class="header-content">
+      <!-- Foto de perfil -->
+      <img src="/assets/images/profile.png" alt="Perfil de usuario" class="profile-photo">
+      
+      <!-- Mensaje de bienvenida -->
+      <div class="welcome-section">
+        <h1>¡Bienvenido!</h1>
+        <p>Carlos Puente Ortuño</p>
+        <p id="currentDate" style="font-size: 12px; margin-top: 4px;"></p>
+      </div>
+
+      <!-- Contador de tareas -->
+      <div class="task-stats">
+        <span id="taskCounter">0/0</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main>
+    <!-- FILTROS -->
+    <div class="filters">
+      <button class="filter-btn active" data-filter="all">
+        Todas
+      </button>
+      <button class="filter-btn" data-filter="pending">
+        Pendientes
+      </button>
+      <button class="filter-btn" data-filter="completed">
+        Completadas
+      </button>
+    </div>
+
+    <!-- LISTA DE TAREAS -->
+    <div id="tasksList">
+      <!-- Se renderiza dinámicamente con JavaScript -->
+    </div>
+  </main>
+
+  <!-- BOTÓN FLOTANTE PARA AGREGAR TAREAS -->
+  <button id="addTaskBtn" title="Agregar tarea">+</button>
+
+  <!-- MODAL PARA ENTRADA DE TAREAS -->
+  <div id="inputModal">
+    <div class="modal-content">
+      <h2>Nueva tarea</h2>
+      <div class="modal-input-group">
+        <textarea 
+          id="taskInput" 
+          placeholder="¿Qué necesitas hacer?" 
+          maxlength="500"
+          autocomplete="off"
+        ></textarea>
+      </div>
+      <div class="modal-input-group">
+        <label for="taskTime">Hora (opcional)</label>
+        <input 
+          type="time" 
+          id="taskTime" 
+          autocomplete="off"
+        >
+      </div>
+      <div class="modal-buttons">
+        <button id="saveTaskBtn">Crear</button>
+        <button id="closeModal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="/js/storage.js"></script>
+  <script src="/js/ui.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
